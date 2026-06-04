@@ -5,7 +5,7 @@ config:
   layout: dagre
 ---
 flowchart TB
-    PLP(["🛒 Product List Page"]) -- Action: Click 'View More Details' --> PVP(["🔍 Product View Page"])
+    PLP(["🛒 Product List Page"]) -- Click 'View More Details' --> PVP(["🔍 Product View Page"])
     PVP -- Back to Catalog --> PLP
     PLP -. Navigate Next/Prev Pages .-> PLP
     PLP -- Click 'Add to Cart' --> CP(["🛍️ Cart Page"])
@@ -13,7 +13,7 @@ flowchart TB
     CP -. Adjust Item Quantity .-> CP
     CP -. System: Refreshes Cart Totals .-> CP
     CP -- Submit Cart to Checkout --> CO(["💳 Checkout Flow"])
-    CO -- Condition: Unauthenticated User --> LP(["🔐 Login Page"])
+    CO -- Unauthenticated User --> LP(["🔐 Login Page"])
     LP -- Provide credentials & Login --> CO
     CO -- System: Create Order --> StateOpen[/"Order State: OPEN"/]
     StateOpen -- Confirm Order --> StateAccepted[/"Order State: ACCEPTED"/]
