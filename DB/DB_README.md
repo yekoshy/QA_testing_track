@@ -22,6 +22,9 @@ Follow these steps in your terminal (PowerShell) to set up the project from scra
 # Install SQLite3 via Windows Package Manager
 winget install SQLite.SQLite
 
+# Install SQLite3 via Homebrew (macOS usually comes with it pre-installed)
+brew install sqlite
+
 # Initialize a new Node.js project
 npm init -y
 
