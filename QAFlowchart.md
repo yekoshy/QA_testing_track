@@ -1,4 +1,4 @@
-<pre>
+
 ```mermaid
 flowchart TB
     %% Removed the layout: elk config to allow GitHub to render it natively
@@ -31,5 +31,4 @@ flowchart TB
     class Step1,Step2,Step3 yesPath
     class ReportBug bugPath
 ```
-</pre>
 
