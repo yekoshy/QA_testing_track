@@ -1,4 +1,4 @@
-mermaid```
+```mermaid
 erDiagram
     %% Entities and their attributes
     USERS {
