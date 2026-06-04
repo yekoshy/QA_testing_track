@@ -30,6 +30,6 @@ flowchart TB
     class first,second,third,fourth,fifth,sixth noPath
     class Step1,Step2,Step3 yesPath
     class ReportBug bugPath
-
-</pre>
 ```
+</pre>
+
