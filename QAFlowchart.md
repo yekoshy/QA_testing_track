@@ -7,7 +7,7 @@ config:
 flowchart TB
     Start{"Is QA important <br> in a team?"} -- No --> first["Lost Trust & Brand Damage"]
     first -- and --> second["100x Financial Cost"]
-    second -- and --> third@{ label: "The 'Firefighting' Trap" }
+    second -- and --> third["The 'Firefighting' Trap"]
     third -- and --> fourth["Security & Compliance Risks"]
     fourth -- and --> fifth["Fragmented UX"]
     fifth -- and --> sixth["Team Burnout & Blame"]
