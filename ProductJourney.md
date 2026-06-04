@@ -1,9 +1,5 @@
 
 ```mermaid
----
-config:
-  layout: dagre
----
 flowchart TB
     PLP(["🛒 Product List Page"]) -- Action: Click 'View More Details' --> PVP(["🔍 Product View Page"])
     PVP -- Action: Back to Catalog --> PLP
