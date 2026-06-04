@@ -1,13 +1,12 @@
 -- ==============================================================================
--- MySQL Initialization Script for Basic Store API v2
+-- SQLite Initialization Script for Basic Store API v2
 -- Target Application: Basic Cart (https://testpages.eviltester.com/apps/basiccart/)
 -- ==============================================================================
 
--- 1. Create Database
-CREATE DATABASE IF NOT EXISTS basicstore_db;
-USE basicstore_db;
+-- Enable Foreign Key constraints in SQLite
+PRAGMA foreign_keys = ON;
 
--- 2. Drop existing tables if they exist to allow clean re-initialization
+-- 1. Drop existing tables if they exist to allow clean re-initialization
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS products;
@@ -17,19 +16,17 @@ DROP TABLE IF EXISTS users;
 -- DDL: TABLE DEFINITIONS
 -- ==============================================================================
 
--- 3. Create Users Table
--- Supports the Authentication/Login Flow
+-- 2. Create Users Table
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. Create Products Table
--- Supports the Product List Page (PLP) and Product View Page (PVP)
+-- 3. Create Products Table
 CREATE TABLE products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
@@ -37,25 +34,24 @@ CREATE TABLE products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. Create Orders Table
--- Supports the Checkout Flow and User Page (OPEN vs ACCEPTED states)
+-- 4. Create Orders Table
+-- SQLite uses a CHECK constraint instead of ENUM
 CREATE TABLE orders (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    status ENUM('OPEN', 'ACCEPTED') DEFAULT 'OPEN',
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    status TEXT DEFAULT 'OPEN' CHECK( status IN ('OPEN', 'ACCEPTED') ),
     total_amount DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 6. Create Order Items Table
--- Supports the Cart Items linking products and quantities to an order
+-- 5. Create Order Items Table
 CREATE TABLE order_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL DEFAULT 1,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 1,
     price_at_purchase DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
