@@ -2,7 +2,7 @@
 ```mermaid
 ---
 config:
-  layout: elk
+  layout: dagre
 ---
 flowchart TB
     PLP(["🛒 Product List Page"]) -- Action: Click 'View More Details' --> PVP(["🔍 Product View Page"])
