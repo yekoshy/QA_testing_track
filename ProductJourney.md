@@ -1,5 +1,5 @@
-mermaid
-```
+
+```mermaid
 ---
 config:
   layout: dagre
