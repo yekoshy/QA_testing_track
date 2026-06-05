@@ -1,0 +1,196 @@
+{
+  "info": {
+    "_postman_id": "f3d096ec-24df-4655-aca0-d307ce865fe8",
+    "name": "BasicStore_APITesting",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "19484409",
+    "_collection_link": "https://go.postman.co/collection/19484409-f3d096ec-24df-4655-aca0-d307ce865fe8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Product Count",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Check Product\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.eql(100);\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "application/json",
+            "type": "text",
+            "id": 0
+          }
+        ],
+        "url": {
+          "raw": "https://testpages.eviltester.com/api/basicstore/products/count",
+          "protocol": "https",
+          "host": [
+            "testpages",
+            "eviltester",
+            "com"
+          ],
+          "path": [
+            "api",
+            "basicstore",
+            "products",
+            "count"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get 10 Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "var schema ={\r",
+              "  \"type\": \"array\",\r",
+              "  \"items\": {\r",
+              "    \"type\": \"object\",\r",
+              "    \"properties\": {\r",
+              "      \"id\": {\r",
+              "        \"type\": \"integer\"\r",
+              "      },\r",
+              "      \"price\": {\r",
+              "        \"type\": \"number\"\r",
+              "      },\r",
+              "      \"title\": {\r",
+              "        \"type\": \"string\"\r",
+              "      },\r",
+              "      \"description\": {\r",
+              "        \"type\": \"string\"\r",
+              "      },\r",
+              "      \"stockLevel\": {\r",
+              "        \"type\": \"integer\"\r",
+              "      },\r",
+              "      \"thumbnail\": {\r",
+              "        \"type\": \"string\"\r",
+              "      }\r",
+              "    },\r",
+              "    // 1. Ensure NO unexpected extra fields are returned\r",
+              "    \"additionalProperties\": false, \r",
+              "    // 2. Ensure ALL of these exact fields are present in every object\r",
+              "    \"required\": [\r",
+              "      \"id\",\r",
+              "      \"price\",\r",
+              "      \"title\",\r",
+              "      \"description\",\r",
+              "      \"stockLevel\",\r",
+              "      \"thumbnail\"\r",
+              "    ]\r",
+              "  }\r",
+              "};\r",
+              "\r",
+              "pm.test(\"Response body is valid JSON schema\", function () {\r",
+              "    pm.response.to.have.jsonSchema(schema); \r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://testpages.eviltester.com/api/basicstore/products?from=0&to=10&limit=10",
+          "protocol": "https",
+          "host": [
+            "testpages",
+            "eviltester",
+            "com"
+          ],
+          "path": [
+            "api",
+            "basicstore",
+            "products"
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "0"
+            },
+            {
+              "key": "to",
+              "value": "10"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product with not found ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Verify Error Message\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.errors).to.eql(\"Product with id 1000 not found\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://testpages.eviltester.com/api/basicstore/products/1000",
+          "protocol": "https",
+          "host": [
+            "testpages",
+            "eviltester",
+            "com"
+          ],
+          "path": [
+            "api",
+            "basicstore",
+            "products",
+            "1000"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
