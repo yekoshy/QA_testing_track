@@ -1,0 +1,99 @@
+config:
+  # The base URL of the API
+  target: "https://testpages.eviltester.com"
+    # --- ADD THIS PAYLOAD SECTION ---
+  payload:
+    path: "users.csv"       # The name of your CSV file
+    fields:                 # The column headers in your CSV
+      - "userId"
+      - "password"
+    order: "sequence"       # 'sequence' goes row-by-row. 'random' picks randomly.
+    skipHeader: true        # Skips the first row (headers)
+
+  # --- API Checks --- 
+  plugins:
+    ensure:
+      conditions:
+        # --- Ensure response times are acceptable ---
+        - expression: "http.response_time.p95 < 1000"
+        # --- Ensure no HTTP errors occurred (e.g., 4xx or 5xx status codes) ---
+        - expression: "http.codes.errors == 0"
+
+        # 1. The Slowest 1%: Ensure the absolute worst-case response times aren't terrible
+        - expression: "http.response_time.p99 < 3000"
+        
+        # 2. Specific Status Codes: Guarantee that at least some orders were successfully created!
+        # (HTTP 201 is the standard status code for "Created")
+        - expression: "http.codes.201 > 0"
+        
+        # 3. Specific Status Codes: Ensure the Login/Auth step was successful (HTTP 200 OK)
+        - expression: "http.codes.200 > 0"
+        
+        # 4. No Failures: Ensure that no Vusers failed during the test
+        - expression: "vusers.failed == 0"
+        # 5. No Errors: Ensure that there were no HTTP errors (4xx or 5xx status codes)
+        - expression: "http.codes.4xx == 0"
+          strict: false # Adding strict: false handles the "undefined" issue
+        - expression: "http.codes.5xx == 0"
+          strict: false
+
+# Define the Load Pattern
+  phases:
+    # Phase 1: min (Warm up / Baseline load)
+    - name: "min"
+      duration: 60        # Run for 60 seconds
+      arrivalRate: 2      # 2 users per second
+
+    # Phase 2: middle (Ramp up / Approaching peak)
+    - name: "middle"
+      duration: 60        # Run for 60 seconds
+      arrivalRate: 2      # Start at 2 users per second...
+      rampTo: 10          # ...and gradually increase to 10 users per second
+
+    # Phase 3: max (Spike / Stress load)
+    - name: "max"
+      duration: 30        # Run for 30 seconds
+      arrivalRate: 20     # A sudden spike of 20 users per second
+
+scenarios:
+  - name: "API User Journey: Authenticate -> Create Open Order"
+    flow:
+      # ----------------------------------------------------
+      # Step 1: Authenticate and get Session ID
+      # ----------------------------------------------------
+      - post:
+          url: "/api/basicstore/users/{{ userId }}/authenticate"
+          json:
+            password: "{{ password }}"
+          capture:
+            # Look at the JSON response and save 'sessionId' as a variable
+            - json: "$.sessionId"
+              as: "sessionId"
+
+      # ADD THIS LOG ACTION
+      #- log: "The captured Session ID is: {{ sessionId }}"
+              
+      # Simulate the user taking 1 second to "click" checkout
+      - think: 1
+      
+      # ----------------------------------------------------
+      # Step 2: Create the Order using the captured Session ID
+      # ----------------------------------------------------
+      - post:
+          url: "/api/basicstore/orders"
+          headers:
+            # Inject the variable captured in Step 1 into the custom header
+            X-SESSION-ID: "{{ sessionId }}"
+            accept: "application/json"
+          json:
+            customerId: "{{ userId }}"
+            orderLines:
+              - id: 1
+                number: 5
+          capture:
+            # Look at the JSON response and save 'orderNumber' as a variable
+            - json: "$.orderNumber"
+              as: "orderNumber"
+
+      # ADD THIS LOG ACTION
+      #- log: "The captured Order number is: {{ orderNumber }}"
