@@ -1,0 +1,44 @@
+config:
+  target: "https://testpages.eviltester.com"
+  
+  # Enable the Playwright engine
+  engines:
+    playwright: {
+      trace: {
+        enabled: true
+      }
+    }
+
+  # Link to the script we created in Step 3
+  processor: "./cart-flow.js"
+  # Add the ensure check here:
+  plugins:
+    ensure:
+      conditions:
+      # This checks the custom metric we created in cart-flow.js
+        - expression: "metric_add_to_cart.p95 < 3000"
+        - expression: "vusers.failed == 0"
+        - expression: "metric_page_load.p95 < 4000"
+        - expression: "vusers.completed >= 90"
+
+  # Define the Load Pattern
+  phases:
+    - name: "Warm up"
+      duration: 60           # 1 minute
+      arrivalRate: 1         # 1 user per second
+      
+    - name: "Ramp up"
+      duration: 180          # 3 minutes
+      arrivalRate: 1         # Start at 1 user per second...
+      rampTo: 10             # ...and gradually increase to 10 users per second
+      
+    - name: "Spike"
+      duration: 30           # 30 seconds
+      arrivalRate: 20        # 100 users per second immediately
+
+
+
+scenarios:
+  - engine: playwright
+    testFunction: "addToCartFlow"
+

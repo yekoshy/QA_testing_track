@@ -1,0 +1,9 @@
+{
+    "yaml.schemas": {
+        "https://www.artillery.io/schema.json": [
+            "file:///c%3A/Users/yasmi/Desktop/QA_testing_track/PERFORMANCE/perf-test.yml",
+            "chat-editing-text-model:/c%3A/Users/yasmi/Desktop/QA_testing_track/PERFORMANCE/perf-test.yml?%7B%22kind%22%3A%22doc%22%2C%22documentId%22%3A%22modified-file-entry%3A%3A1%22%2C%22chatSessionResource%22%3A%7B%22%24mid%22%3A1%2C%22external%22%3A%22vscode-chat-session%3A%2F%2Flocal%2FZGQ0NGIxMjItZDkzZS00OWI5LTliZjUtZDFhNWIwMWRjNWEw%22%2C%22path%22%3A%22%2FZGQ0NGIxMjItZDkzZS00OWI5LTliZjUtZDFhNWIwMWRjNWEw%22%2C%22scheme%22%3A%22vscode-chat-session%22%2C%22authority%22%3A%22local%22%7D%7D",
+            "file:///c%3A/Users/yasmi/Desktop/QA_testing_track/PERFORMANCE/perf-stages-test.yml"
+        ]
+    }
+}
