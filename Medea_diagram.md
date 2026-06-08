@@ -13,5 +13,5 @@ graph TD
     B -->|checkout| D
     C --> D
     D -->|type in<br>Data| E
-    E -->|'"Continue<br>Shopping"'| F
+    E -->|&quot;Continue<br>Shopping&quot;| F
 ```
